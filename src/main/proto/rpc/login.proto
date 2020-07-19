@@ -1,0 +1,21 @@
+syntax = "proto3";
+package tech.systemsdesign.proto.rpc;
+
+import "model/user_model.proto";
+import "model/empty_message.proto";
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string auth_token = 1;
+  //reference User message in 'model' package
+  model.User user = 2;
+}
+
+service LoginService {
+  rpc LoginUser(LoginRequest) returns (LoginResponse);
+  rpc Logout(model.EmptyMessage) returns (model.EmptyMessage);
+}

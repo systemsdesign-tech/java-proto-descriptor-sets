@@ -1,0 +1,9 @@
+syntax = "proto3";
+package tech.systemsdesign.proto.model;
+
+message User {
+  string user_id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  int64 last_login_ms = 4;
+}
