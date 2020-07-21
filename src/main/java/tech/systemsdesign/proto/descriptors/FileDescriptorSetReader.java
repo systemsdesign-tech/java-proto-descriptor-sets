@@ -11,8 +11,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class FileDescriptorSetReader {
+
+  private static final int INDENT_SIZE = 2;
 
   public static void main(String[] args) {
     assertArgumentsPresent(args);
@@ -97,7 +100,10 @@ public class FileDescriptorSetReader {
   }
 
   private static void log(String msg, int indent) {
-    System.out.println(" ".repeat(indent * 2) + msg);
+    int numChars = indent * INDENT_SIZE;
+    StringBuilder sb = new StringBuilder(numChars);
+    IntStream.range(0, numChars).forEach(value -> sb.append(' '));
+    System.out.println(sb + msg);
   }
 
   private static void printUsage() {

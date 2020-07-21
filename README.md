@@ -20,6 +20,9 @@ C:\> cd Path\To\java-proto-descriptor-sets
 C:\Path\To\java-proto-descriptor-sets> gradlew run
 ```
 
+## Compatibility
+
+This code works with Java 8 and above.  
 
 ## Generating Protobuf File Descriptor Sets
 
