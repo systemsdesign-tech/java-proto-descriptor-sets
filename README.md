@@ -8,6 +8,7 @@ discussing the code in this repo.
 ## Run
 
 Clone the repo, then run the application.
+
 Mac/Linux:
 ```shell script
 $ ./gradlew run
@@ -102,8 +103,8 @@ class ProtobufFileDescriptorSetReader {
 ## Custom Options in Descriptor Sets
 
 Turns out Protobuf correctly sets options in the generated code, but does not properly parse
-the _set_ options on fields or any other construct. They appear as "unknown fields" in the parsed
-file descriptor set, which is annoying. Further investigation is required.
+the _set_ options on fields or any other construct in the file descriptor set. They appear as
+"unknown fields" which is annoying. Further investigation is required.
 
 ## Why?
 
