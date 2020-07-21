@@ -1,15 +1,24 @@
 # java-proto-descriptor-sets
 
 This project is a demonstration on how to use Proto 3 descriptor sets to obtain metadata about
-the messages and services defined in .proto files. [A blog post is available](https://systemsdesign.tech/)
+the messages and services defined in .proto files.
+[A blog post is available](https://systemsdesign.tech/2020/07/21/protobuf-file-descriptors-generation-and-reading)
 discussing the code in this repo.
 
 ## Run
 
-Clone the repo, then run the application:
+Clone the repo, then run the application.
+Mac/Linux:
 ```shell script
 $ ./gradlew run
 ```
+
+Windows:
+```shell script
+C:\> cd Path\To\java-proto-descriptor-sets
+C:\Path\To\java-proto-descriptor-sets> gradlew run
+```
+
 
 ## Generating Protobuf File Descriptor Sets
 
@@ -28,6 +37,73 @@ protobuf {
     }
 }
 ```
+
+## Reading Protobuf File Descriptor Sets
+
+You can find the code for reading the FileDescriptorSet in [FileDescriptorSetReader.java](src/main/java/tech/systemsdesign/proto/descriptors/FileDescriptorSetReader.java).
+Once parsed, you can get at most of what's in the .proto files (with the exception of options).
+The following should be a good starting point:
+
+```java
+package tech.systemsdesign.proto.descriptors;
+
+import com.google.protobuf.DescriptorProtos.FileDescriptorProto;
+import com.google.protobuf.DescriptorProtos.FileDescriptorSet;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+class ProtobufFileDescriptorSetReader {
+
+  public static void main(String[] args) {
+    //Assuming args[0] contains the descriptor set file path
+    processProtobufDescriptorSet(new File(args[0]));
+  }
+
+  private static void processProtobufDescriptorSet(File descriptorFile) {
+    try (FileInputStream fis = new FileInputStream(descriptorFile)) {
+      FileDescriptorSet fileDescriptorSet = FileDescriptorSet.parseFrom(fis);
+      for (FileDescriptorProto fileDescriptor : fileDescriptorSet.getFileList()) {
+        //fileDescriptor represents a parsed .proto file
+        log("FILE NAME: " + fileDescriptor.getName());
+        log("PACKAGE: " + fileDescriptor.getPackage());
+        fileDescriptor.getMessageTypeList().forEach(messageDescriptor -> {
+          //Do something with defined message
+          messageDescriptor.getName();
+          messageDescriptor.getFieldList().forEach(fieldDescriptor -> {
+            //Do something with message field
+            fieldDescriptor.getName();
+            fieldDescriptor.getNumber();
+            fieldDescriptor.getType();
+          });
+        });
+        fileDescriptor.getServiceList().forEach(service -> {
+          //Do something with the defined service proto
+          service.getName();
+          service.getMethodList().forEach(methodDescriptor -> {
+            //Do something with method definition
+            methodDescriptor.getName();
+            methodDescriptor.getInputType();
+            methodDescriptor.getOutputType();
+          });
+        });
+      }
+    } catch (IOException e) {
+      log("Error: IOException while reading [" + descriptorFile + "]: " + e);
+    }
+  }
+
+  private static void log(String msg) {
+    System.out.println(msg);
+  }
+}
+```
+
+## Custom Options in Descriptor Sets
+
+Turns out Protobuf correctly sets options in the generated code, but does not properly parse
+the _set_ options on fields or any other construct. They appear as "unknown fields" in the parsed
+file descriptor set, which is annoying. Further investigation is required.
 
 ## Why?
 

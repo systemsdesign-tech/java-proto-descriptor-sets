@@ -41,7 +41,7 @@ protobuf {
 
 application {
     //Define the main class for the application.
-    mainClassName = 'tech.systemsdesign.proto.descriptors.App'
+    mainClassName = 'tech.systemsdesign.proto.descriptors.FileDescriptorSetReader'
 }
 
 run {
